@@ -2,6 +2,7 @@ version: '3'
 
 services:
   coordinator:
+#    platform: linux/arm64 
     image: ahanaio/prestodb-sandbox
     ports:
       - "8080:8080"
@@ -14,6 +15,7 @@ services:
       - ./coordinator/coordinator.env
     
   worker:
+#    platform: linux/arm64 
     image: ahanaio/prestodb-sandbox
     container_name: "prestodb-worker-1"
     ports:
@@ -24,6 +26,7 @@ services:
     depends_on:
       - coordinator
   workerone:
+#    platform: linux/arm64 
     image: ahanaio/prestodb-sandbox
     container_name: "prestodb-worker-2"
     ports:
@@ -34,6 +37,7 @@ services:
     depends_on:
       - coordinator
   workertwo:
+#    platform: linux/arm64 
     image: ahanaio/prestodb-sandbox
     container_name: "prestodb-worker-3"
     ports:
@@ -45,6 +49,7 @@ services:
       - coordinator
 
   workerthree:
+#    platform: linux/arm64 
     image: ahanaio/prestodb-sandbox
     container_name: "prestodb-worker-4"
     ports:
@@ -56,6 +61,7 @@ services:
       - coordinator
       
   workerfour:
+#    platform: linux/arm64 
     image: ahanaio/prestodb-sandbox
     container_name: "prestodb-worker-5"
     ports:
@@ -68,7 +74,8 @@ services:
 
   # Hive
   namenode:
-    image: bde2020/hadoop-namenode:2.0.0-hadoop2.7.4-java8
+    platform: linux/arm64 
+    image: mtoma/hadoop-namenode:latest
     container_name: namenode
     volumes:
       - ./hdfs/namenode:/hadoop/dfs/name
@@ -80,7 +87,8 @@ services:
       - "50070:50070"
 
   datanode:
-    image: bde2020/hadoop-datanode:2.0.0-hadoop2.7.4-java8
+    platform: linux/arm64 
+    image: mtoma/hadoop-datanode:latest
     container_name: datanode
     volumes:
       - ./hdfs/datanode:/hadoop/dfs/data
@@ -94,7 +102,8 @@ services:
       - "50075:50075"
 
   hive-server:
-    image: bde2020/hive:2.3.2-postgresql-metastore
+    platform: linux/arm64 
+    image: mtoma/hive:latest
     container_name: hive-server
     volumes:
       - ./csv_data_directory:/csv_data_directory
@@ -109,7 +118,8 @@ services:
       - "10000:10000"
 
   hive-metastore:
-    image: bde2020/hive:2.3.2-postgresql-metastore
+    platform: linux/arm64 
+    image: mtoma/hive:latest
     container_name: hive-metastore
     env_file:
       - ./hadoop-hive/hadoop-hive.env
@@ -122,7 +132,10 @@ services:
       - "9083:9083"
 
   hive-metastore-postgresql:
-    image: bde2020/hive-metastore-postgresql:2.3.0
+    platform: linux/arm64 
+    build:
+      context: docker-hive-metastore-postgresql
+      dockerfile: Dockerfile
     container_name: hive-metastore-postgresql
     volumes:
       - ./metastore-postgresql/postgresql/data:/var/lib/postgresql/data
